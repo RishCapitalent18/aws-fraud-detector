@@ -1,0 +1,21 @@
+# Core ML / NLP
+transformers>=4.35.0
+torch>=2.0.0
+sentence-transformers>=2.2.0
+datasets>=2.14.0
+
+# NLP utilities
+spacy>=3.6.0
+# After installing spacy, run: python -m spacy download en_core_web_sm
+
+# Data
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+
+# Dashboard
+streamlit>=1.28.0
+plotly>=5.17.0
+
+# Utilities
+tqdm>=4.65.0
