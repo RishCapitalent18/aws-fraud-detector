@@ -1,4 +1,4 @@
-# 🚨 Fraud Detection API — AWS Lambda + S3 + CloudWatch
+# 🚨 Fraud Detection API - AWS Lambda + S3 + CloudWatch
 
 > End-to-end MLOps pipeline: train a fraud detection model, deploy it serverlessly on AWS Lambda, and serve real-time predictions via API.
 
@@ -159,7 +159,7 @@ aws lambda update-function-code \
 
 ## Key Findings from Training Data
 
-- **Fraud peaks at 10–11pm** (2.8–2.9% rate vs 0.09% during business hours)
+- **Fraud peaks at 10–11pm** (2.8-2.9% rate vs 0.09% during business hours)
 - **shopping_net** and **misc_net** have highest fraud rates by category
 - **Amount** is the strongest predictor (65% feature importance)
 - **High-value transactions** (>2× customer average) disproportionately flag fraud
@@ -168,7 +168,7 @@ aws lambda update-function-code \
 
 ## Limitations & Next Steps
 
-- Model trained on synthetic data — real-world performance may differ
+- Model trained on synthetic data - real-world performance may differ
 - Cold start latency (~700ms) can be reduced with Lambda SnapStart
 - Add API Gateway for REST endpoint with rate limiting
 - Add model versioning via S3 prefixes for A/B testing
@@ -178,5 +178,5 @@ aws lambda update-function-code \
 
 ## Author
 
-**Rishabh Karthik Ramesh** — MS Computer Engineering, Virginia Tech  
+**Rishabh Karthik Ramesh** - MS Computer Engineering, Virginia Tech  
 [LinkedIn](https://www.linkedin.com/in/rishabh-karthik-ramesh/) · [GitHub](https://github.com/RishCapitalent18) · rishabhkramesh@gmail.com
