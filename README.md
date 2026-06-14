@@ -1,112 +1,182 @@
-# Hi, I'm Rishabh 👋
+# 🚨 Fraud Detection API — AWS Lambda + S3 + CloudWatch
 
-I'm an MS Computer Engineering grad from **Virginia Tech** (May 2026), specializing in AI and Data Analytics. I build things at the intersection of **data engineering, machine learning, and enterprise risk** — from LLM fine-tuning pipelines to fraud detection systems to GRC dashboards that actually get used.
-
-Before grad school I spent 2+ years at **Wipro** as a Cybersecurity Analyst, where I ran risk assessments, built compliance pipelines, and designed the dashboards that helped teams track what actually mattered. That background shapes how I approach ML work: I care about pipelines being reproducible, metrics being interpretable, and results being actionable.
-
-Currently open to **ML/AI Engineer** and **Data Analyst** roles in the US — I'm on OPT and available to start immediately.
+> End-to-end MLOps pipeline: train a fraud detection model, deploy it serverlessly on AWS Lambda, and serve real-time predictions via API.
 
 ---
 
-## 🛠 Tech Stack
+## Architecture
 
-**Languages**
-
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat&logo=postgresql&logoColor=white)
-![MATLAB](https://img.shields.io/badge/MATLAB-0076A8?style=flat&logo=mathworks&logoColor=white)
-
-**ML / AI**
-
-![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
-![Keras](https://img.shields.io/badge/Keras-D00000?style=flat&logo=keras&logoColor=white)
-![Hugging Face](https://img.shields.io/badge/HuggingFace-FFD21E?style=flat&logo=huggingface&logoColor=black)
-
-**Data & Analytics**
-
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white)
-![Spark](https://img.shields.io/badge/Apache%20Spark-E25A1C?style=flat&logo=apachespark&logoColor=white)
-![Tableau](https://img.shields.io/badge/Tableau-E97627?style=flat&logo=tableau&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
-
-**Cloud & Tools**
-
-![Azure](https://img.shields.io/badge/Microsoft%20Azure-0078D4?style=flat&logo=microsoftazure&logoColor=white)
-![ServiceNow](https://img.shields.io/badge/ServiceNow-62D84E?style=flat&logo=servicenow&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white)
-
-**Certifications:** Azure SC-900 · AZ-900 · AI-900 · DP-900
+```
+CSV Data (1.3M transactions)
+        │
+        ▼
+  train_and_upload.py
+  (RandomForest, scikit-learn)
+        │
+        ▼
+  S3 Bucket (model artifact)
+  fraud-detector-rishabh/model/fraud_model.joblib
+        │
+        ▼
+  AWS Lambda (Python 3.13)
+  - Cold start: loads model from S3
+  - Warm: serves predictions in ~270ms
+        │
+        ▼
+  JSON Response
+  { fraud_probability, prediction, risk_level }
+```
 
 ---
 
-## 🔬 Featured Projects
+## Why This Matters
 
-> *Projects marked \* are collaborative group work — I've described my specific contributions in each repo's README.*
-
----
-
-### 🤖 [Large-Scale Reasoning Optimization via LLM Fine-Tuning](https://github.com/RishCapitalent18/Project-Reasoning-SFT-LLM) *
-Fine-tuned **Qwen2.5-3B Instruct** using supervised fine-tuning (SFT) to improve multi-step reasoning reliability.
-
-- Built end-to-end data preparation and training pipelines with dataset normalization, validation, and YAML/Bash-driven configuration for reproducible runs
-- Automated evaluation workflows benchmarked against **AIME 2024/25** and **GPQA Diamond** — achieved **49.4% on GPQA Diamond** (a hard reasoning benchmark where many 7B+ models score below 40%)
-- `PyTorch` `Hugging Face` `YAML` `Bash`
+Building a model is only half the job. This project demonstrates the full production loop:
+- **Model training** on 1.3M real transactions with class imbalance handling
+- **Artifact management** via S3 (versioned, durable, decoupled from compute)
+- **Serverless inference** via Lambda (zero idle cost, auto-scaling)
+- **Monitoring** via CloudWatch (latency, memory, invocation logs)
 
 ---
 
-### 🧠 [Hallucination Mitigation in LLMs — Knowledge Graphs + MoE](https://github.com/RishCapitalent18/Fact-Checking-QnA-System--CG-and-MOEs) *
-Designed a Knowledge-Graph-grounded Mixture-of-Experts QA system to reduce hallucinations in LLM outputs.
+## Model Performance
 
-- Created and validated domain-specific datasets to analyze failure modes and expert routing behavior
-- Trained on **Qwen2.5-3B**, reducing training loss below **0.1**; deployed Streamlit dashboards to monitor accuracy and fairness trends
-- `PyTorch` `Knowledge Graphs` `Streamlit` `Qwen2.5`
+Trained on [synthetic credit card transactions](https://www.kaggle.com/datasets/priyamchoksi/credit-card-transactions-dataset) (1,296,675 rows, 0.58% fraud rate).
 
----
+| Metric | Value |
+|--------|-------|
+| ROC-AUC | **0.9943** |
+| Fraud Recall | 94% |
+| Fraud Precision | 24% |
+| Top feature | `amt` (65% importance) |
+| 2nd feature | `hour` (21% importance) |
 
-### 🚨 [Credit Card Fraud Detection — End-to-End ML Pipeline](https://github.com/RishCapitalent18/credit-card-fraud-detection-ml)
-Solo project. Built a fraud detection system combining **Self-Organizing Maps** for anomaly detection with a neural network classifier.
-
-- Optimized probability-based scoring pipeline; achieved **93.19% detection accuracy**
-- `TensorFlow` `Keras` `NumPy` `Pandas`
-
----
-
-### 📦 [Real-Time Suspicious Baggage Detection — YOLO](https://github.com/RishCapitalent18/Suspicious-Baggage-Detection-System) *
-YOLOv5-based object detection system for identifying suspicious items in real-time baggage screening.
-
-- Improved F1-confidence and precision-recall curves using focal loss; achieved **90.35% accuracy**
-- `YOLOv5` `Python` `OpenCV` `Streamlit`
+Class imbalance handled with `class_weight="balanced"`. High recall prioritized over precision — better to flag a legitimate transaction than miss fraud.
 
 ---
 
-## 💼 Work Highlights
+## API Usage
 
-**Path Perception & Validation Engineer — Victor Tango SAE, Virginia Tech** *(Sep 2024 – Aug 2025)*
-Built a ROS-integrated MATLAB bench-testing framework to validate ADAS path perception pipelines. Engineered a PostgreSQL-backed Dijkstra routing system generating 4096-point waypoint arrays at ±1m centerline accuracy with <500ms response time.
+**Invoke via AWS CLI:**
 
-**Cybersecurity Analyst L2 — GRC, Risk & Data Analytics @ Wipro** *(Apr 2022 – Aug 2024)*
-Managed 140+ cybersecurity and cloud risk assessments through ServiceNow GRC. Designed risk-scoring models that surfaced 37% of critical risks earlier and cut remediation closure time by 25%. Built KPI dashboards used across compliance and security teams.
+```bash
+aws lambda invoke \
+  --function-name fraud-detector \
+  --payload '{"amt": 25000.0, "hour": 23, "day_of_week": 4, "month": 6, "category": "shopping_net", "city_pop": 45000, "lat": 37.77, "long": -122.41, "merch_lat": 37.80, "merch_long": -122.43}' \
+  --region us-east-2 \
+  --cli-binary-format raw-in-base64-out \
+  output.json && cat output.json
+```
+
+**Response:**
+
+```json
+{
+  "statusCode": 200,
+  "body": {
+    "fraud_probability": 0.1682,
+    "prediction": "LEGIT",
+    "risk_level": "LOW"
+  }
+}
+```
+
+**Request fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `amt` | float | Transaction amount ($) |
+| `hour` | int | Hour of day (0–23) |
+| `day_of_week` | int | 0=Monday, 6=Sunday |
+| `month` | int | 1–12 |
+| `category` | string | Merchant category |
+| `city_pop` | int | Cardholder city population |
+| `lat`, `long` | float | Cardholder location |
+| `merch_lat`, `merch_long` | float | Merchant location |
+
+**Risk levels:**
+
+| Fraud Probability | Prediction | Risk Level |
+|-------------------|------------|------------|
+| ≥ 0.70 | FRAUD | HIGH |
+| 0.40 – 0.69 | FRAUD | MEDIUM |
+| < 0.40 | LEGIT | LOW |
 
 ---
 
-## 🔧 Currently Working On
+## AWS Infrastructure
 
-- Cleaning up and documenting the **ADAS path validation framework** (MATLAB + ROS + PostgreSQL) — full repo coming soon
-- Expanding the **LLM reasoning project** with GRPO-based reinforcement fine-tuning experiments
-- Building a personal **risk analytics dashboard** that integrates public threat feeds with a lightweight scoring model
+| Component | Service | Detail |
+|-----------|---------|--------|
+| Model storage | S3 | `fraud-detector-rishabh/model/` |
+| Inference | Lambda | Python 3.13, 512MB, 60s timeout |
+| Monitoring | CloudWatch | Latency, memory, error logs |
+| Permissions | IAM | Least-privilege execution role |
+
+**Lambda performance (warm invocation):**
+- Duration: ~270ms
+- Memory used: ~261MB
+- Cold start: ~700ms (model load from S3)
 
 ---
 
-## 📫 Let's Connect
+## Project Structure
 
-I'm actively looking for **ML/AI Engineer** and **Data Analyst** roles where I can contribute from day one. I'm on OPT — no sponsorship needed to start.
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-rishabh--karthik--ramesh-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rishabh-karthik-ramesh/)
-[![Email](https://img.shields.io/badge/Email-rishabhkramesh@gmail.com-EA4335?style=flat&logo=gmail&logoColor=white)](mailto:rishabhkramesh@gmail.com)
+```
+aws-fraud-detector/
+├── train_and_upload.py    # Train model + upload to S3
+├── lambda_function.py     # Lambda inference handler
+├── requirements.txt
+└── README.md
+```
 
 ---
 
-![Rishabh's GitHub Stats](https://github-readme-stats.vercel.app/api?username=RishCapitalent18&show_icons=true&theme=default&hide_border=true&count_private=true)
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=RishCapitalent18&layout=compact&theme=default&hide_border=true)
+## Setup & Deployment
+
+```bash
+# 1. Train and upload model
+pip install -r requirements.txt
+python train_and_upload.py
+
+# 2. Build deployment package (run in AWS CloudShell)
+mkdir package
+pip install scikit-learn==1.6.1 --no-deps --target ./package
+pip install numpy joblib threadpoolctl scipy narwhals pandas --target ./package
+cp lambda_function.py package/
+cd package && zip -r ../lambda_package.zip . && cd ..
+aws s3 cp lambda_package.zip s3://YOUR_BUCKET/lambda/lambda_package.zip
+
+# 3. Deploy to Lambda
+aws lambda update-function-code \
+  --function-name fraud-detector \
+  --s3-bucket YOUR_BUCKET \
+  --s3-key lambda/lambda_package.zip \
+  --region us-east-2
+```
+
+---
+
+## Key Findings from Training Data
+
+- **Fraud peaks at 10–11pm** (2.8–2.9% rate vs 0.09% during business hours)
+- **shopping_net** and **misc_net** have highest fraud rates by category
+- **Amount** is the strongest predictor (65% feature importance)
+- **High-value transactions** (>2× customer average) disproportionately flag fraud
+
+---
+
+## Limitations & Next Steps
+
+- Model trained on synthetic data — real-world performance may differ
+- Cold start latency (~700ms) can be reduced with Lambda SnapStart
+- Add API Gateway for REST endpoint with rate limiting
+- Add model versioning via S3 prefixes for A/B testing
+- Retrain pipeline with SageMaker for full MLOps automation
+
+---
+
+## Author
+
+**Rishabh Karthik Ramesh** — MS Computer Engineering, Virginia Tech  
+[LinkedIn](https://www.linkedin.com/in/rishabh-karthik-ramesh/) · [GitHub](https://github.com/RishCapitalent18) · rishabhkramesh@gmail.com
